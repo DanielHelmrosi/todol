@@ -1,6 +1,6 @@
 const form = document.querySelector('#form');
-const taskInput = document.querySelector('#taskinput'); // исправлено на правильный id
-const tasksList = document.querySelector('#tasklist'); // исправлено на правильный id
+const taskInput = document.querySelector('#taskinput');
+const tasksList = document.querySelector('#tasklist');
 const emptyList = document.querySelector('#emptylist');
 
 let tasks = [];
@@ -13,37 +13,30 @@ if (localStorage.getItem('tasks')) {
 
 checkEmptyList();
 
-// Обработчики событий
 form.addEventListener('submit', addTask);
 tasksList.addEventListener('click', handleTaskAction);
 
-// Функции
+
 function addTask(event) {
     event.preventDefault();
 
     const taskText = taskInput.value;
 
-    // Создаем задачу как объект
     const newTask = {
         id: Date.now(),
         text: taskText,
         done: false,
     };
 
-    // Добавляем задачу в массив
     tasks.push(newTask);
 
-    // Сохраняем задачи в localStorage
     saveToLocalStorage();
 
-    // Рендерим задачу на странице
     renderTask(newTask);
 
-    // Очищаем поле ввода и фокусируемся на нем
     taskInput.value = '';
     taskInput.focus();
 
-    // Проверяем, нужно ли показать сообщение "Список дел пуст"
     checkEmptyList();
 }
 
@@ -59,16 +52,12 @@ function deleteTask(event) {
     const parentNode = event.target.closest('.list-group-item'); // исправлено
     const id = Number(parentNode.id);
 
-    // Удаляем задачу из массива по id
     tasks = tasks.filter((task) => task.id !== id);
 
-    // Сохраняем изменения в localStorage
     saveToLocalStorage();
 
-    // Удаляем задачу из DOM
     parentNode.remove();
 
-    // Проверяем, нужно ли показать сообщение "Список дел пуст"
     checkEmptyList();
 }
 
@@ -76,14 +65,11 @@ function doneTask(event) {
     const parentNode = event.target.closest('.list-group-item');
     const id = Number(parentNode.id);
 
-    // Ищем задачу в массиве по id и меняем её статус
     const task = tasks.find((task) => task.id === id);
     task.done = !task.done;
 
-    // Сохраняем изменения в localStorage
     saveToLocalStorage();
 
-    // Меняем класс задачи в DOM для визуального отображения
     const taskTitle = parentNode.querySelector('.task-title');
     taskTitle.classList.toggle('task-title--done');
 }
